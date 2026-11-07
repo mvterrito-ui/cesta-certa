@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cesta Certa – Protótipo</title>
+<style>
+  :root {
+    --verde: #1b5e20;
+    --verde-claro: #e6f4e7;
+    --amarelo-claro: #fff3c4;
+    --marrom: #5c3d00;
+    --texto: #1f2421;
+    --texto-2: #4a524c;
+    --borda: #8a948c;
+    --fundo: #f4f6f4;
+    --branco: #ffffff;
+    --foco: #0b57d0;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: Roboto, "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+    background: var(--fundo);
+    color: var(--texto);
+    font-size: 16px;
+    line-height: 1.45;
+  }
+  .tela {
+    width: 360px;
+    min-height: 780px;
+    margin: 0 auto;
+    background: var(--fundo);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .barra {
+    background: var(--verde);
+    color: #fff;
+    padding: 10px 12px 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 64px;
+  }
+  .barra .marca { font-weight: 700; font-size: 18px; display: flex; align-items: center; gap: 8px; }
+  .barra .usuario { font-size: 14px; opacity: .95; }
+  .barra .esp { flex: 1; }
+  .btn-barra {
+    background: transparent; color: #fff; border: 2px solid rgba(255,255,255,.85);
+    border-radius: 8px; min-height: 48px; min-width: 48px; padding: 0 12px;
+    font-size: 16px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;
+    cursor: pointer;
+  }
+  .btn-voltar { border: none; padding: 0 8px 0 0; }
+  .conteudo { padding: 20px 16px 120px; flex: 1; }
+  h1 { font-size: 24px; margin: 0 0 16px; }
+  h2 { font-size: 18px; margin: 24px 0 8px; }
+  label.rotulo { display: block; font-weight: 600; font-size: 16px; margin-bottom: 6px; }
+  .campo {
+    display: flex; align-items: center; gap: 8px;
+    background: #fff; border: 2px solid var(--borda); border-radius: 10px;
+    min-height: 56px; padding: 0 12px;
+  }
+  .campo.foco { border-color: var(--foco); box-shadow: 0 0 0 3px rgba(11,87,208,.25); }
+  .campo input {
+    border: none; outline: none; font-size: 18px; flex: 1; min-width: 0;
+    background: transparent; color: var(--texto); font-family: inherit;
+  }
+  .ajuda { font-size: 14px; color: var(--texto-2); margin-top: 6px; }
+  .contagem { font-size: 15px; color: var(--texto-2); margin: 20px 0 10px; }
+  .cartao {
+    display: flex; align-items: center; gap: 12px;
+    background: #fff; border: 1px solid #cfd6d0; border-radius: 12px;
+    padding: 14px 12px 14px 16px; min-height: 72px; margin-bottom: 8px;
+    cursor: pointer; width: 100%; text-align: left; font: inherit; color: inherit;
+  }
+  .cartao:focus-visible, button:focus-visible, input:focus-visible {
+    outline: 3px solid var(--foco); outline-offset: 2px;
+  }
+  .cartao .info { flex: 1; }
+  .cartao .nome { font-size: 18px; font-weight: 700; }
+  .cartao .linha { font-size: 15px; color: var(--texto-2); }
+  .cartao .ultima { font-size: 15px; font-weight: 600; color: var(--texto); margin-top: 2px; }
+  .seta { color: var(--texto-2); flex-shrink: 0; }
+  .rodape {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    padding: 12px 16px 20px; background: var(--fundo);
+    border-top: 1px solid #dfe5e0;
+  }
+  .btn {
+    width: 100%; min-height: 56px; border-radius: 12px;
+    font-size: 18px; font-weight: 700; font-family: inherit;
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    cursor: pointer;
+  }
+  .btn-principal { background: var(--verde); color: #fff; border: none; }
+  .btn-principal[disabled] { background: #5f7a61; cursor: progress; }
+  .btn-secundario { background: #fff; color: var(--verde); border: 2px solid var(--verde); }
+  .ficha { background: #fff; border: 1px solid #cfd6d0; border-radius: 12px; padding: 16px; }
+  .ficha .nome { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+  .ficha .dado { display: flex; align-items: center; gap: 10px; font-size: 16px; margin-top: 6px; color: var(--texto); }
+  .lista-entregas { list-style: none; padding: 0; margin: 0; background: #fff; border: 1px solid #cfd6d0; border-radius: 12px; }
+  .lista-entregas li { padding: 12px 16px; font-size: 16px; border-bottom: 1px solid #e3e8e4; display: flex; justify-content: space-between; }
+  .lista-entregas li:last-child { border-bottom: none; }
+  .lista-entregas .quem { color: var(--texto-2); font-size: 15px; }
+  .aviso-conferir { font-size: 15px; color: var(--texto-2); margin: 0 0 10px; text-align: center; }
+  .resultado { border-radius: 16px; padding: 28px 20px; text-align: center; margin-top: 8px; }
+  .resultado.ok { background: var(--verde-claro); color: var(--verde); border: 2px solid var(--verde); }
+  .resultado.alerta { background: var(--amarelo-claro); color: var(--marrom); border: 2px solid #8a6200; }
+  .resultado .titulo { font-size: 24px; font-weight: 800; margin: 12px 0 8px; }
+  .resultado .texto { font-size: 17px; color: var(--texto); }
+  .resultado .extra { font-size: 16px; font-weight: 700; margin-top: 12px; }
+  .vazio { background: #fff; border: 1px dashed var(--borda); border-radius: 12px; padding: 16px; font-size: 16px; }
+  body.captura .tela { margin: 0; }
+  .lado-a-lado { display: flex; gap: 24px; justify-content: center; padding: 0; background: #d9dfda; }
+  .lado-a-lado .tela { margin: 0; }
+  .legenda { text-align: center; font-weight: 700; padding: 10px 0; background: #d9dfda; font-size: 15px; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+  const familias = {
+    antonio: { nome: "Antônio Carlos Silva", pessoas: 2, cpf: "***.321.654-**",
+               endereco: "Rua das Palmeiras, 120 – Jd. Bandeirantes",
+               entregas: [["04/10", "Paulo"], ["20/09", "Juliana"]], ultima: "04/10", apta: true },
+    maria:   { nome: "Maria José da Silva", pessoas: 4, cpf: "***.456.789-**",
+               endereco: "Rua dos Ipês, 45 – Jd. Bandeirantes",
+               entregas: [["12/10", "Paulo"], ["27/09", "Juliana"]], ultima: "12/10", apta: false },
+    rosana:  { nome: "Rosana Silva Lima", pessoas: 5, cpf: "***.987.123-**",
+               endereco: "Av. Bandeirantes, 890 – Jd. Bandeirantes",
+               entregas: [], ultima: null, apta: true }
+  };
+
+  const ic = {
+    cesta: '<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M5.5 9 9.6 3.4l1.6 1.2L7.9 9h8.2l-3.3-4.4 1.6-1.2L18.5 9H22v2h-1.2l-1.6 9.1A2 2 0 0 1 17.2 22H6.8a2 2 0 0 1-2-1.9L3.2 11H2V9h3.5Zm-.3 2 1.6 9h10.4l1.6-9H5.2ZM9 13h2v5H9v-5Zm4 0h2v5h-2v-5Z"/></svg>',
+    lupa: '<svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path fill="#4a524c" d="M10 2a8 8 0 0 1 6.3 12.9l5.4 5.4-1.4 1.4-5.4-5.4A8 8 0 1 1 10 2Zm0 2a6 6 0 1 0 0 12 6 6 0 0 0 0-12Z"/></svg>',
+    sair: '<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M5 3h8v2H5v14h8v2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Zm11.6 4.6L21 12l-4.4 4.4-1.4-1.4 2-2H9v-2h8.2l-2-2 1.4-1.4Z"/></svg>',
+    voltar: '<svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20 11v2H8l5.5 5.5-1.4 1.4L4.2 12l7.9-7.9 1.4 1.4L8 11h12Z"/></svg>',
+    seta: '<svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="m9.4 18.6-1.4-1.4 5.2-5.2-5.2-5.2L9.4 5.4 16 12l-6.6 6.6Z"/></svg>',
+    casa: '<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="#4a524c" d="M12 3 2 11.5l1.3 1.5L5 11.6V21h14v-9.4l1.7 1.4 1.3-1.5L12 3Zm5 16h-3v-5h-4v5H7v-9.1l5-4.3 5 4.3V19Z"/></svg>',
+    pessoas: '<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="#4a524c" d="M9 12a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm0-2a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm7.5 2a3 3 0 1 1 0-6 3 3 0 0 1 0 6ZM2 20c0-3.3 3.1-6 7-6s7 2.7 7 6h-2c0-2.1-2.2-4-5-4s-5 1.9-5 4H2Zm15.5-6c2.8 0 4.5 1.9 4.5 5h-2c0-2-1-3-2.5-3H16v-2h1.5Z"/></svg>',
+    doc: '<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="#4a524c" d="M3 5h18v14H3V5Zm2 2v10h14V7H5Zm2 2h4v2H7V9Zm0 4h7v2H7v-2Z"/></svg>',
+    check: '<svg width="64" height="64" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#1b5e20"/><path fill="#fff" d="m10 15.6-3.6-3.6L5 13.4l5 5 9-9-1.4-1.4L10 15.6Z"/></svg>',
+    alerta: '<svg width="64" height="64" viewBox="0 0 24 24" aria-hidden="true"><path fill="#8a6200" d="M12 1.5 23.5 21.5H.5L12 1.5Z"/><path fill="#fff" d="M11 9h2v6h-2V9Zm0 8h2v2h-2v-2Z"/></svg>',
+    mais: '<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6V5Z"/></svg>'
+  };
+
+  function tela1() {
+    const cards = Object.entries(familias).map(([id, f]) => `
+      <button class="cartao" onclick="ir('tela2/${id}')">
+        <span class="info">
+          <span class="nome">${f.nome}</span><br>
+          <span class="linha">${f.pessoas} pessoas · CPF ${f.cpf}</span><br>
+          <span class="ultima">${f.ultima ? "Última cesta: " + f.ultima : "Nenhuma cesta registrada"}</span>
+        </span>
+        <span class="seta">${ic.seta}</span>
+      </button>`).join("");
+    return `
+    <div class="tela">
+      <header class="barra">
+        <div>
+          <div class="marca">${ic.cesta} Cesta Certa</div>
+          <div class="usuario">Olá, Juliana (voluntária)</div>
+        </div>
+        <span class="esp"></span>
+        <button class="btn-barra" onclick="ir('tela1')">${ic.sair} Sair</button>
+      </header>
+      <main class="conteudo">
+        <h1>Buscar família</h1>
+        <label class="rotulo" for="busca">Nome ou CPF do responsável</label>
+        <div class="campo foco">${ic.lupa}<input id="busca" value="silva" aria-describedby="ajuda"></div>
+        <div class="ajuda" id="ajuda">Digite pelo menos 3 letras ou o CPF completo.</div>
+        <div class="contagem" role="status">3 famílias encontradas</div>
+        ${cards}
+      </main>
+      <div class="rodape">
+        <button class="btn btn-secundario">${ic.mais} Cadastrar nova família</button>
+      </div>
+    </div>`;
+  }
+
+  function tela2(id, registrando) {
+    const f = familias[id];
+    const entregas = f.entregas.length
+      ? f.entregas.map(([d, q]) => `<li><span>Cesta em ${d}</span><span class="quem">por ${q}</span></li>`).join("")
+      : `<li><span>Nenhuma entrega registrada</span></li>`;
+    return `
+    <div class="tela">
+      <header class="barra">
+        <button class="btn-barra btn-voltar" onclick="ir('tela1')">${ic.voltar} Voltar</button>
+        <span class="esp"></span>
+        <div class="marca">Família</div>
+        <span class="esp"></span><span style="width:72px"></span>
+      </header>
+      <main class="conteudo">
+        <section class="ficha" aria-label="Dados da família">
+          <div class="nome">${f.nome}</div>
+          <div class="dado">${ic.pessoas} ${f.pessoas} pessoas na família</div>
+          <div class="dado">${ic.doc} CPF ${f.cpf}</div>
+          <div class="dado">${ic.casa} ${f.endereco}</div>
+        </section>
+        <h2>Últimas entregas</h2>
+        <ul class="lista-entregas">${entregas}</ul>
+      </main>
+      <div class="rodape">
+        <p class="aviso-conferir">Confira o nome antes de registrar.</p>
+        ${registrando
+          ? `<button class="btn btn-principal" disabled>Registrando...</button>`
+          : `<button class="btn btn-principal" onclick="registrar('${id}')">${ic.cesta} Registrar entrega</button>`}
+      </div>
+    </div>`;
+  }
+
+  function tela3(id) {
+    const f = familias[id];
+    const corpo = f.apta ? `
+      <div class="resultado ok" role="alert">
+        ${ic.check}
+        <div class="titulo">Entrega registrada</div>
+        <div class="texto"><strong>${f.nome}</strong> recebeu a cesta em 27/10 às 9h42.</div>
+      </div>` : `
+      <div class="resultado alerta" role="alert">
+        ${ic.alerta}
+        <div class="titulo">Já recebeu cesta</div>
+        <div class="texto">Esta família recebeu cesta em <strong>12/10</strong>.<br>Próxima entrega a partir de <strong>27/10</strong>.</div>
+        <div class="extra">Nenhuma entrega foi registrada.</div>
+      </div>`;
+    const botao = f.apta
+      ? `<button class="btn btn-principal" onclick="ir('tela1')">Atender próxima família</button>`
+      : `<button class="btn btn-principal" onclick="ir('tela1')">${ic.voltar} Voltar à busca</button>`;
+    return `
+    <div class="tela">
+      <header class="barra">
+        <div class="marca">${ic.cesta} Cesta Certa</div>
+      </header>
+      <main class="conteudo">
+        <h1 style="font-size:20px;margin-bottom:8px">Resultado da entrega</h1>
+        <p style="margin:0 0 8px;color:var(--texto-2)">${f.nome}</p>
+        ${corpo}
+      </main>
+      <div class="rodape">${botao}</div>
+    </div>`;
+  }
+
+  function tela3Comparativo() {
+    return `
+    <div class="lado-a-lado">
+      <div><div class="legenda">Estado de sucesso</div>${tela3("antonio")}</div>
+      <div><div class="legenda">Estado de aviso (duplicidade)</div>${tela3("maria")}</div>
+    </div>`;
+  }
+
+  function registrar(id) {
+    render(tela2(id, true));
+    setTimeout(() => ir("tela3/" + id), 700);
+  }
+
+  function ir(rota) { location.hash = rota; }
+
+  function render(html) { document.getElementById("app").innerHTML = html; }
+
+  function rotear() {
+    const [tela, id] = (location.hash.slice(1) || "tela1").split("/");
+    if (tela === "tela2") render(tela2(id || "antonio"));
+    else if (tela === "tela3") render(tela3(id || "antonio"));
+    else if (tela === "tela3-comparativo") render(tela3Comparativo());
+    else render(tela1());
+  }
+
+  if (location.search.includes("captura")) document.body.classList.add("captura");
+  window.addEventListener("hashchange", rotear);
+  rotear();
+</script>
+</body>
+</html>
