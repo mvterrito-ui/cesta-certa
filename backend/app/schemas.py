@@ -88,3 +88,19 @@ class EntregaRegistrada(BaseModel):
     nome_responsavel: str
     data_entrega: datetime
     proxima_entrega: date
+
+
+class EntregasPorVoluntario(BaseModel):
+    nome: str
+    entregas: int
+
+
+class RelatorioMensal(BaseModel):
+    ano: int
+    mes: int
+    total_entregas: int
+    familias_atendidas: int
+    pessoas_atendidas: int
+    familias_ativas: int
+    familias_sem_entrega: int
+    por_voluntario: list[EntregasPorVoluntario]
