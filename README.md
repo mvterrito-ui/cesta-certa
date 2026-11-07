@@ -20,7 +20,7 @@ O MVP substitui o caderno de papel usado nos sábados de distribuição. O volun
 | RF01 | Cadastrar família com CPF do responsável único | ✅ |
 | RF02 | Buscar família e registrar a entrega da cesta | ✅ |
 | RF03 | Bloquear nova entrega em menos de 15 dias, com aviso claro | ✅ |
-| RF04 | Relatório mensal de entregas (coordenação) | 🔄 em revisão (PR) |
+| RF04 | Relatório mensal de entregas (coordenação) | ✅ |
 
 Requisitos não funcionais atendidos no código:
 
@@ -51,6 +51,8 @@ Requisitos não funcionais atendidos no código:
 | Tela 1 – Buscar família | Tela 2 – Registro de entrega | Tela 3 – Sucesso | Tela 3 – Aviso |
 |---|---|---|---|
 | ![Busca](docs/capturas-mvp/1-tela1-busca.png) | ![Família](docs/capturas-mvp/2-tela2-familia.png) | ![Sucesso](docs/capturas-mvp/3a-tela3-sucesso.png) | ![Aviso](docs/capturas-mvp/3b-tela3-aviso.png) |
+
+O relatório mensal (RF04) fica acessível só para a coordenação: [captura](docs/capturas-mvp/6-relatorio-mensal.png).
 
 O protótipo navegável que originou as telas está em [docs/prototipo](docs/prototipo/index.html).
 
