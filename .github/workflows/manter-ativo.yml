@@ -1,0 +1,16 @@
+# Plano gratuito: o Render hiberna a API após ~15 min e o Supabase pausa após
+# 1 semana sem uso. Esta rotina consulta /saude, que também executa "SELECT 1".
+name: Manter API ativa
+
+on:
+  schedule:
+    - cron: "0 11 * * *" # todo dia às 8h de Brasília
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    if: ${{ vars.API_URL != '' }}
+    steps:
+      - name: Consultar /saude
+        run: curl --fail --retry 3 --retry-delay 20 --max-time 60 "${{ vars.API_URL }}/saude"
