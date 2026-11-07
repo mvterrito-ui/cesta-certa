@@ -5,6 +5,7 @@ import { RouterLink } from '@angular/router';
 import { Subject, catchError, debounceTime, distinctUntilChanged, map, of, switchMap } from 'rxjs';
 
 import { ApiService, mensagemDeErro } from '../../core/api.service';
+import { AuthService } from '../../core/auth.service';
 import { diaMes, somenteDigitos } from '../../core/formatos';
 import { FamiliaResumo } from '../../core/modelos';
 import { BarraTopo } from '../../shared/barra-topo';
@@ -25,6 +26,11 @@ type EstadoBusca =
     <div class="tela">
       <app-barra-topo />
       <main class="conteudo">
+        @if (auth.ehAdministrador()) {
+          <a class="btn btn-secundario btn-atalho" routerLink="/relatorio">
+            <app-icone nome="grafico" /> Relatório do mês
+          </a>
+        }
         <h1>Buscar família</h1>
         <label class="rotulo" for="busca">Nome ou CPF do responsável</label>
         <div class="campo">
@@ -90,6 +96,7 @@ type EstadoBusca =
 })
 export class Busca {
   private readonly api = inject(ApiService);
+  protected readonly auth = inject(AuthService);
   protected readonly diaMes = diaMes;
 
   protected readonly termo = new FormControl(this.api.ultimaBusca(), { nonNullable: true });

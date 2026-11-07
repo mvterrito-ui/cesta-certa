@@ -3,7 +3,13 @@ import { Injectable, inject, signal } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { environment } from '../../environments/environment';
-import { EntregaRegistrada, FamiliaDetalhe, FamiliaResumo, NovaFamilia } from './modelos';
+import {
+  EntregaRegistrada,
+  FamiliaDetalhe,
+  FamiliaResumo,
+  NovaFamilia,
+  RelatorioMensal,
+} from './modelos';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -28,6 +34,11 @@ export class ApiService {
 
   registrarEntrega(familiaId: number): Observable<EntregaRegistrada> {
     return this.http.post<EntregaRegistrada>(`${this.base}/familias/${familiaId}/entregas`, {});
+  }
+
+  relatorioMensal(ano: number, mes: number): Observable<RelatorioMensal> {
+    const params = new HttpParams().set('ano', ano).set('mes', mes);
+    return this.http.get<RelatorioMensal>(`${this.base}/relatorios/mensal`, { params });
   }
 }
 

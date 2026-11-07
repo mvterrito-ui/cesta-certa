@@ -11,7 +11,8 @@ export type NomeIcone =
   | 'documento'
   | 'mais'
   | 'sucesso'
-  | 'alerta';
+  | 'alerta'
+  | 'grafico';
 
 /** Ícones em SVG no próprio template, sem innerHTML (RNF02) e sempre ao lado de um texto (RNF04). */
 @Component({
@@ -74,6 +75,12 @@ export type NomeIcone =
         @case ('sucesso') {
           <circle cx="12" cy="12" r="11" fill="#1b5e20" />
           <path fill="#fff" d="m10 15.6-3.6-3.6L5 13.4l5 5 9-9-1.4-1.4L10 15.6Z" />
+        }
+        @case ('grafico') {
+          <path
+            fill="currentColor"
+            d="M3 3h2v16h16v2H3V3Zm4 9h3v5H7v-5Zm5-5h3v10h-3V7Zm5 3h3v7h-3v-7Z"
+          />
         }
         @case ('alerta') {
           <path fill="#8a6200" d="M12 1.5 23.5 21.5H.5L12 1.5Z" />
