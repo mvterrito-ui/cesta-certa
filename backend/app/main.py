@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from app.config import get_settings
-from app.routers import auth, familias, saude
+from app.routers import auth, familias, relatorios, saude
 from app.services.erros import ErroDeNegocio
 
 logger = logging.getLogger("cesta_certa")
@@ -65,6 +65,7 @@ def criar_app() -> FastAPI:
     app.include_router(saude.router)
     app.include_router(auth.router)
     app.include_router(familias.router)
+    app.include_router(relatorios.router)
     return app
 
 

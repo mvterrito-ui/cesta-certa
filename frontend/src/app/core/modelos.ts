@@ -60,6 +60,17 @@ export interface BloqueioEntrega {
   proxima_entrega: string;
 }
 
+export interface RelatorioMensal {
+  ano: number;
+  mes: number;
+  total_entregas: number;
+  familias_atendidas: number;
+  pessoas_atendidas: number;
+  familias_ativas: number;
+  familias_sem_entrega: number;
+  por_voluntario: { nome: string; entregas: number }[];
+}
+
 /** Estado passado da Tela 2 para a Tela 3. */
 export type ResultadoEntrega =
   | { tipo: 'sucesso'; nome: string; dataEntrega: string }

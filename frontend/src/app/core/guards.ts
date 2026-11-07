@@ -8,6 +8,11 @@ export const exigeLogin: CanActivateFn = () => {
   return auth.autenticado() || inject(Router).createUrlTree(['/login']);
 };
 
+export const somenteCoordenacao: CanActivateFn = () => {
+  const auth = inject(AuthService);
+  return auth.ehAdministrador() || inject(Router).createUrlTree(['/busca']);
+};
+
 export const somenteVisitante: CanActivateFn = () => {
   const auth = inject(AuthService);
   return !auth.autenticado() || inject(Router).createUrlTree(['/busca']);
