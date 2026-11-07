@@ -2,6 +2,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.models import Familia
+from app.texto import normalizar_busca
 
 
 def buscar_ativas(db: Session, termo: str, limite: int = 20) -> list[Familia]:
@@ -9,9 +10,11 @@ def buscar_ativas(db: Session, termo: str, limite: int = 20) -> list[Familia]:
     if termo.isdigit():
         consulta = consulta.where(Familia.documento_responsavel == termo)
     else:
+        # Compara sem acentos e sem diferenciar maiúsculas: "antonio" acha "Antônio".
         # O termo vai como parâmetro da consulta, nunca concatenado no SQL (RNF02).
+        termo = normalizar_busca(termo)
         termo = termo.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
-        consulta = consulta.where(Familia.nome_responsavel.ilike(f"%{termo}%", escape="\\"))
+        consulta = consulta.where(Familia.nome_busca.like(f"%{termo}%", escape="\\"))
     return list(db.scalars(consulta.order_by(Familia.nome_responsavel).limit(limite)))
 
 

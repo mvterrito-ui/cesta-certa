@@ -60,6 +60,24 @@ def test_busca_por_parte_do_nome_sem_diferenciar_maiusculas(
     assert nomes == ["Antônio Carlos Silva", "Maria José da Silva"]
 
 
+@pytest.mark.parametrize("termo", ["antonio", "ANTÔNIO", "Antonio  Carlos"])
+def test_busca_ignora_acentos_como_o_voluntario_digita(
+    client, auth_voluntario, db, voluntario, termo
+):
+    # Rodada 1 de validação: "antonio" sem acento não encontrava "Antônio".
+    criar_familia(db, voluntario, "Antônio Carlos Silva", CPF_ANTONIO)
+    resposta = client.get("/familias", params={"busca": termo}, headers=auth_voluntario)
+    assert resposta.status_code == 200
+    assert [f["nome_responsavel"] for f in resposta.json()] == ["Antônio Carlos Silva"]
+
+
+def test_nome_de_busca_acompanha_a_alteracao_do_nome(db, voluntario):
+    familia = criar_familia(db, voluntario, "Jose Pereira", CPF_ANTONIO)
+    familia.nome_responsavel = "José Pereira Júnior"
+    db.commit()
+    assert familia.nome_busca == "jose pereira junior"
+
+
 def test_busca_pelo_cpf_completo_com_pontuacao(client, auth_voluntario, db, voluntario):
     criar_familia(db, voluntario, "Antônio Carlos Silva", CPF_ANTONIO)
     resposta = client.get("/familias", params={"busca": "123.321.654-60"}, headers=auth_voluntario)

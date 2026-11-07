@@ -9,10 +9,11 @@ from sqlalchemy import (
     Integer,
     String,
 )
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship, validates
 
 from app.database import Base
 from app.tempo import agora_utc
+from app.texto import normalizar_busca
 
 
 class Usuario(Base):
@@ -42,7 +43,10 @@ class Familia(Base):
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    nome_responsavel: Mapped[str] = mapped_column(String(120), index=True)
+    nome_responsavel: Mapped[str] = mapped_column(String(120))
+    # Nome sem acentos e em minúsculas, preenchido automaticamente. A busca usa
+    # esta coluna para que "antonio" encontre "Antônio" (feedback da validação).
+    nome_busca: Mapped[str] = mapped_column(String(120), index=True)
     # CPF só com dígitos; UNIQUE impede cadastrar a mesma família duas vezes (RF01).
     documento_responsavel: Mapped[str] = mapped_column(String(11), unique=True)
     telefone: Mapped[str | None] = mapped_column(String(15))
@@ -59,6 +63,11 @@ class Familia(Base):
     entregas: Mapped[list["Entrega"]] = relationship(
         back_populates="familia", order_by="desc(Entrega.data_entrega)"
     )
+
+    @validates("nome_responsavel")
+    def _atualizar_nome_busca(self, _chave: str, nome: str) -> str:
+        self.nome_busca = normalizar_busca(nome)
+        return nome
 
 
 class Entrega(Base):
