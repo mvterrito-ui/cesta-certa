@@ -18,8 +18,10 @@ def ultimas_datas(db: Session, familia_ids: list[int]) -> dict[int, datetime]:
     return {familia_id: data for familia_id, data in db.execute(consulta)}
 
 
-def ultima_data(db: Session, familia_id: int) -> datetime | None:
-    return ultimas_datas(db, [familia_id]).get(familia_id)
+def ultima(db: Session, familia_id: int) -> Entrega | None:
+    """Entrega mais recente da família, já com o voluntário que a registrou."""
+    recentes = historico(db, familia_id, limite=1)
+    return recentes[0] if recentes else None
 
 
 def historico(db: Session, familia_id: int, limite: int = 5) -> list[Entrega]:

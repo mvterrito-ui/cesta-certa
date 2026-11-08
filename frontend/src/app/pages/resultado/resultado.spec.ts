@@ -43,4 +43,18 @@ describe('Resultado (Tela 3)', () => {
     expect(alerta?.querySelector('svg')).not.toBeNull();
     expect(tela.textContent).toContain('Voltar à busca');
   });
+
+  it('informa quem fez a última entrega no aviso de bloqueio', () => {
+    const tela = renderizar({
+      tipo: 'aviso',
+      nome: 'Maria José da Silva',
+      ultimaEntrega: '2026-11-02',
+      proximaEntrega: '2026-11-17',
+      entreguePor: 'Juliana',
+    });
+    const alerta = tela.querySelector('[role="alert"]');
+    expect(alerta?.textContent?.replace(/\s+/g, ' ')).toContain(
+      'Esta família recebeu cesta em 02/11. Entregue por Juliana. Próxima entrega a partir de 17/11.',
+    );
+  });
 });

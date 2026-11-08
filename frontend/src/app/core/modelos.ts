@@ -58,6 +58,8 @@ export interface BloqueioEntrega {
   detail: string;
   ultima_entrega: string;
   proxima_entrega: string;
+  /** Voluntário que registrou a última entrega. */
+  entregue_por?: string;
 }
 
 export interface RelatorioMensal {
@@ -74,4 +76,10 @@ export interface RelatorioMensal {
 /** Estado passado da Tela 2 para a Tela 3. */
 export type ResultadoEntrega =
   | { tipo: 'sucesso'; nome: string; dataEntrega: string }
-  | { tipo: 'aviso'; nome: string; ultimaEntrega: string; proximaEntrega: string };
+  | {
+      tipo: 'aviso';
+      nome: string;
+      ultimaEntrega: string;
+      proximaEntrega: string;
+      entreguePor?: string;
+    };
