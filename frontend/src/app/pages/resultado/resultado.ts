@@ -37,6 +37,10 @@ import { Icone } from '../../shared/icone';
               <div class="texto">
                 Esta família recebeu cesta em <strong>{{ diaMes(r.ultimaEntrega) }}</strong
                 >.<br />
+                @if (r.entreguePor) {
+                  Entregue por <strong>{{ r.entreguePor }}</strong
+                  >.<br />
+                }
                 Próxima entrega a partir de <strong>{{ diaMes(r.proximaEntrega) }}</strong
                 >.
               </div>

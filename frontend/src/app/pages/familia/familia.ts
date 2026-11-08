@@ -126,6 +126,7 @@ export class Familia implements OnInit {
             nome: familia.nome_responsavel,
             ultimaEntrega: bloqueio.ultima_entrega,
             proximaEntrega: bloqueio.proxima_entrega,
+            entreguePor: bloqueio.entregue_por,
           });
           return;
         }

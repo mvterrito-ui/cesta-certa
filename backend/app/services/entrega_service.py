@@ -22,15 +22,19 @@ def registrar(
 
     agora = agora_utc()
     hoje = data_local(agora)
-    ultima = entrega_repo.ultima_data(db, familia_id)
+    ultima = entrega_repo.ultima(db, familia_id)
     if ultima is not None:
-        ultima_dia = data_local(ultima)
+        ultima_dia = data_local(ultima.data_entrega)
         if not pode_receber(ultima_dia, hoje, intervalo):
+            # Nome de quem entregou: a coordenação sabe a quem perguntar quando
+            # a família contesta o bloqueio (feedback da 1ª rodada de validação).
+            entregue_por = ultima.usuario.nome
             db.rollback()
             raise Conflito(
                 mensagem_bloqueio(ultima_dia, intervalo),
                 ultima_entrega=ultima_dia.isoformat(),
                 proxima_entrega=proxima_entrega(ultima_dia, intervalo).isoformat(),
+                entregue_por=entregue_por,
             )
 
     entrega = entrega_repo.criar(

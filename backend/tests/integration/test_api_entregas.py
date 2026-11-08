@@ -34,6 +34,17 @@ def test_segunda_entrega_no_mesmo_dia_e_bloqueada(client, auth_voluntario, db, v
     assert corpo["proxima_entrega"] == proxima.isoformat()
 
 
+def test_bloqueio_informa_quem_fez_a_ultima_entrega(
+    client, auth_voluntario, auth_admin, db, voluntario
+):
+    # Rodada 1 de validação: "quem entregou da outra vez?"
+    familia = criar_familia(db, voluntario)
+    criar_entrega_antiga(db, familia, voluntario, dias_atras=5)
+    resposta = client.post(f"/familias/{familia.id}/entregas", headers=auth_admin)
+    assert resposta.status_code == 409
+    assert resposta.json()["entregue_por"] == voluntario.nome
+
+
 def test_bloqueio_nao_grava_nova_entrega(client, auth_voluntario, db, voluntario):
     familia = criar_familia(db, voluntario)
     criar_entrega_antiga(db, familia, voluntario, dias_atras=5)
