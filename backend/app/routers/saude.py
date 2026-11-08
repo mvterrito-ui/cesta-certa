@@ -9,8 +9,12 @@ from app.database import get_db
 router = APIRouter(tags=["saúde"])
 
 
-@router.get("/saude")
+@router.api_route("/saude", methods=["GET", "HEAD"])
 def saude(db: Annotated[Session, Depends(get_db)]):
-    """Consultado pelo GitHub Actions para manter a API e o Supabase ativos."""
+    """Verificação de saúde da API e do banco.
+
+    Consultada pelo UptimeRobot (que usa HEAD) a cada 5 minutos e pelo GitHub
+    Actions; também evita que a API e o banco hibernem no plano gratuito.
+    """
     db.execute(text("SELECT 1"))
     return {"status": "ok"}

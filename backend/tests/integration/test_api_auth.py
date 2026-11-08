@@ -63,3 +63,10 @@ def test_saude_responde_ok(client):
     resposta = client.get("/saude")
     assert resposta.status_code == 200
     assert resposta.headers["X-Content-Type-Options"] == "nosniff"
+
+
+def test_saude_aceita_head_usado_pelo_monitoramento(client):
+    # O UptimeRobot gratuito verifica com HEAD; antes a rota respondia 405.
+    resposta = client.head("/saude")
+    assert resposta.status_code == 200
+    assert resposta.content == b""
