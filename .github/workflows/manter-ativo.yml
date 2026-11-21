@@ -1,5 +1,6 @@
-# Plano gratuito: o Render hiberna a API após ~15 min e o Supabase pausa após
-# 1 semana sem uso. Esta rotina consulta /saude, que também executa "SELECT 1".
+# Verificação diária da API e do banco: consulta /saude/banco, que executa "SELECT 1".
+# O UptimeRobot (a cada 5 min) usa /saude, que não toca no banco, para o Neon
+# poder suspender o compute quando ocioso e não esgotar o plano gratuito.
 name: Manter API ativa
 
 on:
@@ -12,5 +13,5 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ vars.API_URL != '' }}
     steps:
-      - name: Consultar /saude
-        run: curl --fail --retry 3 --retry-delay 20 --max-time 60 "${{ vars.API_URL }}/saude"
+      - name: Consultar /saude/banco
+        run: curl --fail --retry 3 --retry-delay 20 --max-time 60 "${{ vars.API_URL }}/saude/banco"
