@@ -139,7 +139,7 @@ No CI, os testes de integração rodam contra um PostgreSQL 17 real (serviço do
    - Start: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
    - Variáveis: `AMBIENTE=producao`, `DATABASE_URL`, `JWT_SECRET` e `CORS_ORIGINS` (URL da Vercel).
 3. **Vercel:** importe `frontend/`. O arquivo `vercel.json` já define o build, as rotas da SPA e a CSP. Ajuste a URL da API em `src/environments/environment.production.ts` e em `connect-src`, no `vercel.json`.
-4. **GitHub:** em *Settings → Variables*, crie `API_URL`. A rotina `manter-ativo.yml` consulta `/saude` todo dia, para evitar a pausa do Supabase.
+4. **GitHub:** em *Settings → Variables*, crie `API_URL`. A rotina `manter-ativo.yml` consulta `/saude/banco` todo dia. O monitoramento a cada 5 min (UptimeRobot) deve usar `/saude`, que não consulta o banco, para não manter o compute do Neon sempre ligado.
 
 ## Fluxo de trabalho
 

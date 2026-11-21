@@ -70,3 +70,9 @@ def test_saude_aceita_head_usado_pelo_monitoramento(client):
     resposta = client.head("/saude")
     assert resposta.status_code == 200
     assert resposta.content == b""
+
+
+def test_saude_banco_consulta_o_banco(client):
+    resposta = client.get("/saude/banco")
+    assert resposta.status_code == 200
+    assert resposta.json() == {"status": "ok", "banco": "ok"}
